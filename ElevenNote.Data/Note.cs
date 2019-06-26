@@ -13,7 +13,7 @@ namespace ElevenNote.Data
 
         public int NoteID { get; set; }
         [Required]
-        public Guid OwnerID { get; set; }
+        public Guid OwnerId { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
