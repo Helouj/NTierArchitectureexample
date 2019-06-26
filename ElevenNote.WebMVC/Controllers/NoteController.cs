@@ -15,9 +15,10 @@ namespace ElevenNote.WebMVC.Controllers
         // GET: Note
         public ActionResult Index()
         {
-            var userId = Guid.Parse(User.Identity.GetUserId());
-            var service = new NoteService(userId);
-            var model = service.GetNotes();
+            Guid userId = Guid.Parse(User.Identity.GetUserId());
+            NoteService service = new NoteService(userId);
+            IEnumerable<NoteListItem> model = service.GetNotes();
+            //check user's identity, creates a new service with their userid, uses service to get their notes, then returns the list of their notes.  classic repository stuff right here
 
             return View(model);
         }
@@ -28,16 +29,29 @@ namespace ElevenNote.WebMVC.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+     [ValidateAntiForgeryToken]
+     public ActionResult Create(NoteCreate model)
+     {
+         if (!ModelState.IsValid) return View(model);            
 
-        public ActionResult Create(NoteCreate model)
+         var service = CreateNoteService();
+
+         if (service.CreateNote(model))
+         {
+                TempData["SaveResult"] = "Your note was created.";
+                return RedirectToAction("Index");
+            };
+
+         ModelState.AddModelError("", "Note could not be created.");
+
+         return View(model);
+     }
+
+        private NoteService CreateNoteService()
         {
-
-            if (ModelState.IsValid)
-            {
-
-            }
-            return View(model);
+            Guid userId = Guid.Parse(User.Identity.GetUserId());
+            NoteService service = new NoteService(userId);
+            return service;
         }
     }
 }

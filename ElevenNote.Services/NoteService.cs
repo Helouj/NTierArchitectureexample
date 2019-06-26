@@ -41,18 +41,16 @@ namespace ElevenNote.Services
         {
             using (var ctx = new ApplicationDbContext())
             {
-                var query =
+                IQueryable<NoteListItem> query =
                     ctx
                         .Notes
                         .Where(e => e.OwnerId == _userId)
-                        .Select(
-                            e =>
-                                new NoteListItem
-                                {
-                                    NoteID = e.NoteID,
-                                    Title = e.Title,
-                                    CreatedUtc = e.CreatedUtc
-                                }
+                        .Select(e => new NoteListItem
+                        {
+                            NoteID = e.NoteID,
+                            Title = e.Title,
+                            CreatedUtc = e.CreatedUtc
+                        }
                         );
 
                 return query.ToArray();
