@@ -63,7 +63,7 @@ namespace ElevenNote.Services
                 var entity =
                     ctx
                         .Notes
-                        .Single(e => e.NoteID == id && e.OwnerId == _userId);
+                        .Single(e => e.NoteID == id && e.OwnerId == _userId);//returns the 1 element that satisfies this condition, error if multiple
                 return
                     new NoteDetail
                     {
